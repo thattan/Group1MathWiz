@@ -138,6 +138,11 @@ switch ($action) {
 
         die();
         break;
+    
+    case 'finaltest':
+        include './views/finaltest.php';
+        die();
+        break;
 }
 
 ?>
