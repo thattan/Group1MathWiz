@@ -1,6 +1,7 @@
 <?php
-
+require_once 'models/database.php';
 require_once 'models/userDB.php';
+require_once 'models/user.php';
 
 session_start();
 date_default_timezone_set('America/Chicago');
@@ -14,7 +15,7 @@ if ($action == null) {
 }
 
 switch ($action) {
-    case 'index':
+    case 'index': // initial site load
         $_SESSION['user'] = '';
         $userName = '';
         $password = '';
@@ -24,7 +25,7 @@ switch ($action) {
         die();
         break;
     
-    case 'viewRegistration':
+    case 'viewRegistration': // Goes to registration page
         $userNameError = '';
         $emailError = '';
         $user = New User();
@@ -32,7 +33,7 @@ switch ($action) {
         die();
         break;
 
-    case 'login':
+    case 'login': // When logging in
         $_SESSION['user'] = '';
         $username = filter_input(INPUT_POST, 'userName');
         $password = filter_input(INPUT_POST, 'password');
@@ -83,7 +84,7 @@ switch ($action) {
         die();
         break;
 
-    case 'register':
+    case 'register': // When registering account
         $username = '';
         $password = '';
         $userType = '';
