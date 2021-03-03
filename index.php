@@ -1,5 +1,7 @@
 <?php
 
+require_once 'models/userDB.php';
+
 session_start();
 date_default_timezone_set('America/Chicago');
 
@@ -25,7 +27,7 @@ switch ($action) {
     case 'viewRegistration':
         $userNameError = '';
         $emailError = '';
-        //$organization = New Organization();
+        $user = New User();
         include './views/register.php';
         die();
         break;
@@ -40,44 +42,100 @@ switch ($action) {
         $user = null;
         $existingUsername = '';
         if ($username === '') {
-            $emailError = 'You must enter a username';
+            $userNameError = 'You must enter a username';
             $error = TRUE;
         }
 
-        if ($password == '' && $_SESSION['organization'] == '') {
+        if ($password == '') {
             $passwordError = 'You must enter a password.';
             $error = TRUE;
         }
 
-        if ($email != '') {
-            $existingEmail = OrganizationDB::select_unique_org_email($email);
+        if ($username != '') {
+            $existingUsername = userDB::select_unique_username($username);
         }
 
-        if ($existingEmail != '') {
-            $organization = OrganizationDB::get_organization_by_email($email);
-            $oldPassword = $organization->getPassword();
+        if ($existingUsername != '') {
+            $user = userDB::get_user_by_username($username);
+            $oldPassword = $user->getPassword();
             $isPassword = password_verify($password, $oldPassword);
             
             if ($isPassword == FALSE) {
                 $error = TRUE;
-                $emailError= "Email or Password is incorrect";
+                $userNameError= "Username or Password is incorrect";
             } 
 
-            if ($error == FALSE) {
-                $_SESSION['organization'] = $organization;
-                include './views/viewOrganization.php';
+            if ($error == FALSE) { // SUCCESSFUL LOGIN
+                $_SESSION['user'] = $user;
+                if ($user->getUserType() == 'T') {
+                    include './views/teacherHome.php';
+                } else {
+                    include './views/studentHome.php';
+                }       
             } else {
-                $emailError = "Cannot be found";
+                $userNameError = "Cannot be found";
                 include './views/login.php';
             }
         } else {
-            $emailError= "Email or Password is incorrect";
+            $userNameError= "Username or Password is incorrect";
             include './views/login.php';
         }
         die();
         break;
 
     case 'register':
+        $username = '';
+        $password = '';
+        $userType = '';
+        $userNameError = '';
+        $passwordError = '';
+        $userTypeError = '';
+        $username = filter_input(INPUT_POST, 'username');
+        $password = filter_input(INPUT_POST, 'password');
+        $userType = filter_input(INPUT_POST, 'userType');
+        $error = false;
+        
+        If ($username != '') {
+            $tempUserName = userDB::get_user_by_username($username);
+            if ($tempUserName != '') {
+                $error = true;
+                $userNameError = 'This is username is taken';
+            }
+        } else {
+            $userNameError = 'Username cannot be empty';
+            $error = true;
+        }
+        
+        If ($password != '') {
+            
+        } else {
+            $passwordError = 'Password cannot be empty';
+            $error = true;
+        }
+
+        If ($userType != '') {
+            
+        } else {
+            $userNameError = 'User Type must be chosen';
+            $error = true;
+        }
+        
+        if ($error == false) {
+             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+             $user = New User($username, $passwordHash, $userType);
+             $userId = userDB::add_user($user);
+             $user->setId($userId);
+             $_SESSION['user'] = $user;
+             if ($user->getUserType() == "T") {
+                 include './views/teacherHome.php';
+             } else {
+                 include './views/studentHome.php';
+             }
+        } else {
+            $user = New User($username, $password, $userType);
+            include './views/register.php';
+        }
+
         die();
         break;
 }
