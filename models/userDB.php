@@ -21,7 +21,7 @@ class userDB {
               VALUES
                  (:username, :password, :usertype)';
         $statement = $db->prepare($query);
-        $statement->bindValue(':username', $user->getUsername);
+        $statement->bindValue(':username', $user->getUsername());
         $statement->bindValue(':password', $user->getPassword());
         $statement->bindValue(':usertype', $user->getUserType());
         $statement->execute();
