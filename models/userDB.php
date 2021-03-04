@@ -61,7 +61,7 @@ class userDB {
 
         $user = new User(
                 $results['username'], $results['password'],
-                $results['userType']);
+                $results['usertype']);
         $user->setId($results['pk_id']);
         return $user;
     }
@@ -78,7 +78,7 @@ class userDB {
 
         $user = new User(
                 $results['username'], $results['password'],
-                $results['userType']);
+                $results['usertype']);
         $user->setId($results['pk_id']);
         return $user;
     }
