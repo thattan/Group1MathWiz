@@ -35,7 +35,7 @@ switch ($action) {
 
     case 'login': // When logging in
         $_SESSION['user'] = '';
-        $username = filter_input(INPUT_POST, 'userName');
+        $username = filter_input(INPUT_POST, 'username');
         $password = filter_input(INPUT_POST, 'password');
         $userNameError = '';
         $passwordError = '';
@@ -97,7 +97,7 @@ switch ($action) {
         $error = false;
         
         If ($username != '') {
-            $tempUserName = userDB::get_user_by_username($username);
+            $tempUserName = userDB::select_unique_username($username);
             if ($tempUserName != '') {
                 $error = true;
                 $userNameError = 'This is username is taken';
