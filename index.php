@@ -2,6 +2,7 @@
 require_once 'models/database.php';
 require_once 'models/userDB.php';
 require_once 'models/user.php';
+require_once 'models/classRoomDB.php';
 
 session_start();
 date_default_timezone_set('America/Chicago');
@@ -142,6 +143,13 @@ switch ($action) {
     
     case 'finaltest':
         include './views/finaltest.php';
+        die();
+        break;
+    
+    case 'assignStudent':
+        $students = classRoomDB::get_all_users();
+        
+        include './views/assignStudent.php';
         die();
         break;
 }

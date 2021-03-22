@@ -15,7 +15,11 @@
             <h1>Teacher Home Page</h1>
             
         </form>
+        
+        <p><a class="link" href="index.php?action=assignStudent">Assign Students To Classroom</a></p>
+
     </div>
+    
 </body>
 
 </html>

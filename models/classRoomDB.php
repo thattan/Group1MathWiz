@@ -15,4 +15,16 @@ class ClassRoomDB {
        $id = $db->lastInsertId();
        return $id;
     }
+    
+    public static function get_all_users(){
+        $db = Database::getDB();
+        
+        $query = 'SELECT * FROM user';
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $results = $statement->fetchAll();
+        $statement->closeCursor();
+        
+        return $results;                
+    }
 }
